@@ -1,0 +1,10 @@
+#test comment
+WIDTH=15
+HEIGHT=15
+ENTRY=0,0
+EXIT=10,14
+OUTPUT_FILE=maze.txt
+PERFECT=True
+seed=34
+=hello world
+
