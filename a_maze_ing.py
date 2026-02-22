@@ -49,8 +49,8 @@ class MazeApplication:
         
         self.width = self.maze_config['width']
         self.height = self.maze_config['height']
-        self.entry = self.maze_config['entry_position']
-        self.exit_pos = self.maze_config['exit_position']
+        self.entry = self.maze_config['entry']
+        self.exit_pos = self.maze_config['exit']
         
         self.maze = None
         self.show_solution = False
