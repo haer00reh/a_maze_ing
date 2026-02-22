@@ -1,6 +1,7 @@
 import curses
 from generate import MazeGenerator
 from rendering import MazeRenderer
+from color_schemes import COLOR_SCHEMES
 
 class MazeSolver:
     """Handles maze solving using backtracking (DFS)."""
@@ -57,6 +58,7 @@ class MazeApplication:
         self.maze = None
         self.show_solution = False
         self.solution_path = None
+        self.current_color_scheme = 'Cyberpunk'
         
         self._initialize_maze()
         curses.curs_set(0)
@@ -81,10 +83,45 @@ class MazeApplication:
         else:
             self.show_solution = False
     
+    def _select_color_scheme(self):
+        """Display color scheme selection menu."""
+        schemes = list(COLOR_SCHEMES.keys())
+        selected_index = schemes.index(self.current_color_scheme) if self.current_color_scheme in schemes else 0
+        
+        while True:
+            self.stdscr.clear()
+            try:
+                self.stdscr.addstr(0, 2, 'Select Color Scheme', curses.A_BOLD)
+                self.stdscr.addstr(1, 2, '=' * 30)
+                
+                for idx, scheme in enumerate(schemes):
+                    if idx == selected_index:
+                        self.stdscr.addstr(3 + idx, 2, f'> {scheme}', curses.A_REVERSE)
+                    else:
+                        self.stdscr.addstr(3 + idx, 2, f'  {scheme}')
+                
+                self.stdscr.addstr(3 + len(schemes) + 1, 2, '=' * 30)
+                self.stdscr.addstr(3 + len(schemes) + 2, 2, 'Use arrow keys, enter and select, echap to cancel')
+            except curses.error:
+                pass
+            
+            self.stdscr.refresh()
+            key = self.stdscr.getch()
+            
+            if key == curses.KEY_UP:
+                selected_index = (selected_index - 1) % len(schemes)
+            elif key == curses.KEY_DOWN:
+                selected_index = (selected_index + 1) % len(schemes)
+            elif key in [curses.KEY_ENTER, 10, 13]:
+                self.current_color_scheme = schemes[selected_index]
+                break
+            elif key == 27:
+                break
+    
     def run(self):
         """Run the interactive maze application."""
         MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
-                         self.solution_path, self.show_solution)
+                         self.solution_path, self.show_solution, self.current_color_scheme)
         
         while True:
             key = self.stdscr.getch()
@@ -94,11 +131,15 @@ class MazeApplication:
             elif key == ord('2'):
                 self._solve_maze()
                 MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
-                                 self.solution_path, self.show_solution)
+                                 self.solution_path, self.show_solution, self.current_color_scheme)
             elif key == ord('1'):
                 self._regenerate_maze()
                 MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
-                                 self.solution_path, self.show_solution)
+                                 self.solution_path, self.show_solution, self.current_color_scheme)
+            elif key == ord('4'):
+                self._select_color_scheme()
+                MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
+                                 self.solution_path, self.show_solution, self.current_color_scheme)
 
 
 def main(stdscr):
