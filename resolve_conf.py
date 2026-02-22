@@ -14,29 +14,31 @@ def parse_errors(errors: list) -> None:
         i += 1
 
 
-def main() -> None:
-    env = {**dotenv_values()}
+def resolve_conf() -> dict:
+    env: dict = {**dotenv_values()}
+    result: dict = {}
     try:
         conf_file: str | None = env.get('conf_file')
         re: str = open(conf_file or "config.txt", 'r').read()
         if len(re) <= 0:
             raise FileEmptyError("the configuratoin file can't be empty")
-    except (BaseConfFileErrors, FileNotFoundError):
-        print(f"Error: configuration file '{conf_file}'")
-        return
+    except (BaseConfFileErrors):
+        print("Error: configuration file is empty")
+        return result
+    except FileNotFoundError:
+        print("Error: configuration file not found")
+        return result
 
     try:
         content: dict = Parsing.get_conf(re)
     except ValueError as e:
         print("Error:", e)
-        return
+        return result
     try:
         conf: Parsing = Parsing(**content)
     except ValidationError as e:
         parse_errors(e.errors())
-        return
+        return result
     else:
-        print(conf)
-
-
-main()
+        result = (conf.__dict__)
+    return result

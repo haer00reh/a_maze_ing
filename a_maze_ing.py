@@ -2,6 +2,8 @@ import curses
 from generate import MazeGenerator
 from rendering import MazeRenderer
 from color_schemes import COLOR_SCHEMES
+from resolve_conf import resolve_conf
+
 
 class MazeSolver:
     """Handles maze solving using backtracking (DFS)."""
@@ -40,15 +42,10 @@ class MazeSolver:
 class MazeApplication:
     """Main application for interactive maze solving."""
     
-    def __init__(self, stdscr):
+    def __init__(self, stdscr, conf):
         """Initialize the maze application."""
         self.stdscr = stdscr
-        self.maze_config = {
-            'width': 51,
-            'height': 50,
-            'entry_position': (1, 0),
-            'exit_position': (4, 40)
-        }
+        self.maze_config = conf
         
         self.width = self.maze_config['width']
         self.height = self.maze_config['height']
@@ -144,9 +141,11 @@ class MazeApplication:
 
 def main(stdscr):
     """Main function to run the application."""
-    a_maze_ing = MazeApplication(stdscr)
+    a_maze_ing = MazeApplication(stdscr, resolve_conf())
     a_maze_ing.run()
 
 
 if __name__ == '__main__':
-    curses.wrapper(main)
+    res = resolve_conf()
+    if len(res) > 0:
+        curses.wrapper(main)

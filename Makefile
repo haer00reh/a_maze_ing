@@ -1,7 +1,7 @@
 
 
 main:
-	@python3 main_ne.py
+	@python3 a_maze_ing.py
 
 clean:
 	@rm -rf */__pycache__
