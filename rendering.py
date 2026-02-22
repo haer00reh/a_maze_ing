@@ -16,7 +16,7 @@ class MazeRenderer:
         curses.start_color()
         curses.use_default_colors()
         
-        scheme = COLOR_SCHEMES.get(color_scheme_name, COLOR_SCHEMES['Blue'])
+        scheme = COLOR_SCHEMES.get(color_scheme_name, COLOR_SCHEMES['Cyberpunk'])
         pair_num = 1
         
         for key, (fg, bg) in scheme.items():
