@@ -44,10 +44,10 @@ class MazeApplication:
         """Initialize the maze application."""
         self.stdscr = stdscr
         self.maze_config = {
-            'width': 41,
-            'height': 21,
+            'width': 51,
+            'height': 50,
             'entry_position': (1, 0),
-            'exit_position': (4, 20)
+            'exit_position': (4, 40)
         }
         
         self.width = self.maze_config['width']
