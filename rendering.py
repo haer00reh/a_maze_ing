@@ -61,6 +61,8 @@ class MazeRenderer:
                         stdscr.addstr(start_row + y, x * 2, '✖', entry_color)
                     elif cell == 'X':
                         stdscr.addstr(start_row + y, x * 2, '✖', exit_color)
+                    elif cell == '?':
+                        stdscr.addstr(start_row + y, x * 2, '⏹')
                     elif is_solution and show_solution:
                             stdscr.addstr(start_row + y, x * 2, '██', solution_color)
                     else:

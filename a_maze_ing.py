@@ -117,6 +117,7 @@ class MazeApplication:
     
     def run(self):
         """Run the interactive maze application."""
+        MazeGenerator.carve_42(self.maze, self.width, self.height)
         MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
                          self.solution_path, self.show_solution, self.current_color_scheme)
         
@@ -127,14 +128,17 @@ class MazeApplication:
                 break
             elif key == ord('2'):
                 self._solve_maze()
+                MazeGenerator.carve_42(self.maze, self.width, self.height)
                 MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
                                  self.solution_path, self.show_solution, self.current_color_scheme)
             elif key == ord('1'):
                 self._regenerate_maze()
+                MazeGenerator.carve_42(self.maze, self.width, self.height)
                 MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
                                  self.solution_path, self.show_solution, self.current_color_scheme)
             elif key == ord('4'):
                 self._select_color_scheme()
+                MazeGenerator.carve_42(self.maze, self.width, self.height)
                 MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
                                  self.solution_path, self.show_solution, self.current_color_scheme)
 
