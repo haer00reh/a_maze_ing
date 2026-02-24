@@ -9,10 +9,10 @@ def is_empty(s: str) -> bool:
 
 class Parsing(BaseModel):
     width: int = Field(
-        ge=10, description="width conf should be greater than 10"
+        ge=15, description="width conf should be greater than 10"
         )
     height: int = Field(
-        ge=10, description="height conf should be greater than 10"
+        ge=15, description="height conf should be greater than 10"
     )
     entry: tuple = Field(
         description="enty should be valid cordinates x,y"
