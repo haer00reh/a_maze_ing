@@ -55,7 +55,7 @@ class MazeApplication:
         self.maze = None
         self.show_solution = False
         self.solution_path = None
-        self.current_color_scheme = 'Cyberpunk'
+        self.current_color_scheme = 'color 1'
         
         self._initialize_maze()
         curses.curs_set(0)
@@ -123,6 +123,8 @@ class MazeApplication:
         
         while True:
             key = self.stdscr.getch()
+            MazeRenderer.draw(self.stdscr, self.maze, self.entry, self.exit_pos, 
+                            self.solution_path, self.show_solution, self.current_color_scheme)
             
             if key == ord('3'):
                 break
