@@ -4,7 +4,7 @@ from maze.visualization import run_visualizer
 from maze.resolve_conf import resolve_conf
 
 
-def main() -> None:
+def main() -> None:  # to do: make the main get the name of the config file
     conf = resolve_conf()
     if len(conf) > 0:
         try:

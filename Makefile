@@ -1,5 +1,5 @@
 all:
-	python3 -m maze.main
+	python3 -m maze.a_maze_ing
 
 
 clean:

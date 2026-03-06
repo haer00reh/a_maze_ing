@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Callable
 from maze.Cell import Cell
 import random
 import time
@@ -30,6 +30,11 @@ class Gen:
             raise ValueError("exit shouldn't belongs to the 42 pattern")
 
     def apply_42_pattern(s) -> None:
+        """
+        reserve a specific cells inside the maze for the 42 patttern
+
+        :param s: gen instance to access s.maze
+        """
         reserved_cells: Dict[int, list[Tuple[int, int]]] = {
             4: [
                 (0, 0), (1, 0), (2, 0), (2, 1), (3, 1), (4, 1)
@@ -57,9 +62,28 @@ class Gen:
                 s.maze[target_y][target_x].reserved = True
 
     def get_rand_choice(s, all: List[Cell]) -> Cell:
+        """
+        return rand choice inside given list of cells
+
+        :param s: instance
+        :param all: list of cells
+        :type all: List[Cell]
+        :return: chosen cell
+        :rtype: Cell
+        """
         return random.choice(all)
 
     def break_wall(s, main_cell: Cell, target: Cell) -> None:
+        """
+        used to break wall between tow adjusten cells
+            -- it does check for the location of the seccond cell with the main
+            -- cell before break to identify how the break would be
+        :param s: gen instance
+        :param main_cell: first cell to break wall from
+        :type main_cell: Cell
+        :param target: seccond cell to break wall to
+        :type target: Cell
+        """
         main_cell.pt.append(target)
         s.broken_walls += 1
         if main_cell.y != 0:
@@ -88,35 +112,55 @@ class Gen:
                 return
 
     def conf_nighbours(s, c: Cell) -> None:
+        """
+            function to identify and append nighbours of cell
+
+        :param s: instance
+        :param c: target cell
+        :type c: Cell
+        """
         if c.x != 0 and c.x < s.width - 1:
-            # add s.x - 1 and s.x + 1
+            # adds east and west nighbours
             (c.neigbours.append(c.before(s.maze)))
             (c.neigbours.append(c.after(s.maze)))
         elif c.x > 0:
-            # add s.x - 1
+            # add west nighbour
             (c.neigbours.append(c.before(s.maze)))
         elif c.x < s.width - 1:
-            # add s.x + 1
+            # add est nighbour
             (c.neigbours.append(c.after(s.maze)))
 
         if c.y != 0 and c.y < s.height - 1:
-            # add c.y - 1 and c.y + 1
+            # adds north and south nighbours
             (c.neigbours.append(c.abbove(s.maze)))
             (c.neigbours.append(c.under(s.maze)))
         elif c.y > 0:
-            # add c.y - 1
+            # add north nighbour
             (c.neigbours.append(c.abbove(s.maze)))
         elif c.y < s.height - 1:
-            # add s.y + 1
+            # add south nighbour
             (c.neigbours.append(c.under(s.maze)))
 
-    def gen_bfs(s, stdscr, drawer, color) -> None:
+    def gen_bfs(s, stdscr, drawer: Callable, color) -> None:
+        """
+        func to generate the maze using breath first search algorithm
+
+        :param s: instance
+        :param stdscr: std ccrean from curses
+        :param drawer: func drawer injected
+        :param color: Description
+        """
         random.seed(s.seed)
+        # initialize the visited cells
         s.visited.append(s.entry)
+        # queue to consume the cells to be targeted for breaking its walls
         queue: List[Cell] = [s.entry]
+
         while queue:
             ele = queue.pop(random.randint(0, len(queue) - 1))
             nighbours = s.get_valid_neighbours(ele)
+
+            # shuffle the nighbours list
             random.shuffle(nighbours)
             for nib in nighbours:
                 if nib not in s.visited:
@@ -124,22 +168,39 @@ class Gen:
                     s.break_wall(ele, nib)
                     queue.append(nib)
 
+                    # draw the maze with modifyed cells
                     drawer(stdscr, s, color)
                     stdscr.refresh()
                     time.sleep(0.1)
 
     def gen_dfs(s, stdscr, drawer, color) -> None:
+        """
+        func to generate the maze using deep first search algorithm
+
+        :param s: instance
+        :param stdscr: std ccrean from curses
+        :param drawer: func drawer injected
+        :param color: Description
+        """
         random.seed(s.seed)
+
+        # initialize the visited cells
         s.visited.append(s.entry)
+
+        # stack the cells passed by throw breaking walls
         stack: List[Cell] = [s.entry]
+
         while s.broken_walls < (s.width * s.height) - 1:
+
             if (len(stack) == 0):
                 break
+
             nighbours = [
                 n for n in s.get_valid_neighbours(stack[-1])
                 if n not in s.visited
                 ]
-            if len(nighbours) == 0:
+
+            if len(nighbours) == 0:  # no valid neighbours
                 stack.pop()
             else:
                 ele = stack[-1]
@@ -148,12 +209,21 @@ class Gen:
                 s.break_wall(ele, target)
                 stack.append(target)
 
+                # draw the maze with modifyed cells
                 drawer(stdscr, s, color)
                 stdscr.refresh()
                 time.sleep(0.1)
 
     def solve_dfs(s, stdscr, drawer, color) -> None:
 
+        """
+        func to solve the maze using deep first search algorithm
+
+        :param s: instance
+        :param stdscr: std ccrean from curses
+        :param drawer: func drawer injected
+        :param color: Description
+        """
         s.visited = [s.entry]
         stack: List[Cell] = [s.entry]
         s.entry.is_path = True
@@ -188,14 +258,27 @@ class Gen:
             ]
 
     def reset_maze(s) -> None:
+        """
+        reseting the maze visited cells and broken walls
+
+        :param s: instance
+        """
         for line in s.maze:
             for cell in line:
                 cell.val = 15
                 cell.is_path = False
+
         s.visited = []
         s.broken_walls = 0
 
     def is_connected(self, c1, c2):
+        """
+        check if two cells are connected
+
+        :param self: instance
+        :param c1: cell 1
+        :param c2: cell 2
+        """
         if c2.y < c1.y:
             return not (c1.val & 1)
         if c2.x > c1.x:
