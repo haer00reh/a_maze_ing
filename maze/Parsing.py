@@ -78,6 +78,9 @@ class Parsing(BaseModel):
     def finishing(s) -> 'Parsing':
         s.entry = s.to_int(s.entry)
         s.exit = s.to_int(s.exit)
+        if s.entry == s.exit:
+            raise ValueError(
+                "exit coordinates sould be different than entry coordinates")
         if (s.seed is not None):
             s.seeded = True
         if s.entry[0] >= s.width or s.entry[1] >= s.height:
@@ -126,4 +129,7 @@ class Parsing(BaseModel):
             raise ValueError("perfect filed is required")
         if 'seed' not in data:
             data['seed'] = None
+        if data.get('perfect') not in ['False', 'True']:
+            raise ValueError(
+                "Perfect field not configured well, requested (False or True)")
         return data

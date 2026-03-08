@@ -2,11 +2,7 @@ from typing import List
 
 
 class Cell:
-    def __init__(s, x, y) -> None:
-        # s.north_wall = True
-        # s.south_wall = True
-        # s.east_wall = True
-        # s.west_wall = True
+    def __init__(s, x: int, y: int) -> None:
         s.is_path: bool = False
         s.entry: bool = False
         s.exit: bool = False
@@ -25,16 +21,16 @@ class Cell:
             return NotImplemented
         return s.x == ins.x and s.y == ins.y
 
-    def before(s, maze) -> 'Cell':
+    def before(s, maze: List[List['Cell']]) -> 'Cell':
         return maze[s.y][s.x - 1]
 
-    def after(s, maze) -> 'Cell':
+    def after(s, maze: List[List['Cell']]) -> 'Cell':
         return maze[s.y][s.x + 1]
 
-    def abbove(s, maze) -> 'Cell':
+    def abbove(s, maze: List[List['Cell']]) -> 'Cell':
         return maze[s.y - 1][s.x]
 
-    def under(s, maze) -> 'Cell':
+    def under(s, maze: List[List['Cell']]) -> 'Cell':
         return maze[s.y + 1][s.x]
 
     def break_north(cell: 'Cell') -> None:
@@ -48,5 +44,3 @@ class Cell:
 
     def break_west(cell: 'Cell') -> None:
         cell.val -= 8
-
-    # methods to overload [ == ]

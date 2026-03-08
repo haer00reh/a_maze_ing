@@ -7,6 +7,8 @@ import time
 class Gen:
     def __init__(s, conf: dict, en: Tuple[int, int], ex: Tuple[int, int],
                  ) -> None:
+        print(conf)
+        s.output_file: str = conf['output_file']
         s.width: int = conf['width']
         s.height: int = conf['height']
         s.seed: int = conf['seed']
@@ -21,6 +23,11 @@ class Gen:
         s.nib: List[Cell] = []
         s.visited: list[Cell] = []
         s.broken_walls: int = 0
+        s.out_path: List[str] = []
+        s.solution_path: List[Cell] = []
+        s.generated: bool = False
+        s.is_solved: bool = False
+        s.stored_solution: List[Cell] = []
         for line in s.maze:
             for cell in line:
                 s.conf_nighbours(cell)
@@ -111,6 +118,33 @@ class Gen:
             # add s.y + 1
             (c.neigbours.append(c.under(s.maze)))
 
+    def gen_file(s) -> None:
+        with open(s.output_file, 'w') as file:
+            hex = "0123456789abcdef"
+            for line in s.maze:
+                for cell in line:
+                    file.write(hex[cell.val % 16])
+                file.write("\n")
+            file.write("\n")
+            file.write(f"{s.entry.x},{s.entry.y}\n")
+            file.write(f"{s.exit.x},{s.exit.y}\n")
+            for char in s.out_path:
+                file.write(char)
+            file.write("\n")
+
+    def resolve_path(s) -> None:
+        for i in range(len(s.solution_path) - 1):
+            c1 = s.solution_path[i]
+            c2 = s.solution_path[i + 1]
+            if c2.y < c1.y and s.is_connected(c1, c2):
+                s.out_path.append('N')
+            if c2.x > c1.x and s.is_connected(c1, c2):
+                s.out_path.append('E')
+            if c2.y > c1.y and s.is_connected(c1, c2):
+                s.out_path.append('S')
+            if c2.x < c1.x and s.is_connected(c1, c2):
+                s.out_path.append('W')
+
     def gen_bfs(s, stdscr, drawer, color) -> None:
         random.seed(s.seed)
         s.visited.append(s.entry)
@@ -128,12 +162,15 @@ class Gen:
                     drawer(stdscr, s, color)
                     stdscr.refresh()
                     time.sleep(0.03)
-        
-        #make imperfect if configured
+
+        # make imperfect if configured
         if not s.perfect:
             s.make_imperfect()
             drawer(stdscr, s, color)
             stdscr.refresh()
+        s.generated = True
+        s.stored_solution = []
+        s.solution_path = []
 
     def gen_dfs(s, stdscr, drawer, color) -> None:
         random.seed(s.seed)
@@ -158,17 +195,41 @@ class Gen:
                 drawer(stdscr, s, color)
                 stdscr.refresh()
                 time.sleep(0.03)
-        
+
         if not s.perfect:
             s.make_imperfect()
             drawer(stdscr, s, color)
             stdscr.refresh()
+        s.generated = True
+        s.stored_solution = []
+        s.solution_path = []
 
     def solve_dfs(s, stdscr, drawer, color) -> None:
 
         s.visited = [s.entry]
         stack: List[Cell] = [s.entry]
         s.entry.is_path = True
+        if (not s.generated):
+            return
+
+        if (s.is_solved):
+            for e in s.solution_path:
+                e.is_path = False
+            s.is_solved = False
+            s.stored_solution = s.solution_path
+            drawer(stdscr, s, color)
+            stdscr.refresh()
+            time.sleep(0.03)
+            return
+
+        if (len(s.stored_solution) > 0):
+            for cell in s.stored_solution:
+                cell.is_path = True
+                drawer(stdscr, s, color)
+                stdscr.refresh()
+                time.sleep(0.03)
+                s.is_solved = True
+            return
 
         while stack:
             cur: Cell = stack[-1]
@@ -191,6 +252,10 @@ class Gen:
                 drawer(stdscr, s, color)
                 stdscr.refresh()
                 time.sleep(0.03)
+        s.solution_path = stack
+        s.resolve_path()
+        s.gen_file()
+        s.is_solved = True
 
     def get_valid_neighbours(s, cell: Cell) -> List[Cell]:
         return [
@@ -206,6 +271,9 @@ class Gen:
                 cell.is_path = False
         s.visited = []
         s.broken_walls = 0
+        s.generated = False
+        s.is_solved = False
+        s.out_path = []
 
     def reset_solver(s) -> None:
         for line in s.maze:
