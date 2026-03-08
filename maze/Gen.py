@@ -10,6 +10,7 @@ class Gen:
         s.width: int = conf['width']
         s.height: int = conf['height']
         s.seed: int = conf['seed']
+        s.perfect: bool = conf.get('perfect', True)
         s.maze: List[List[Cell]] = [
             [Cell(x, y) for x in range(s.width)] for y in range(s.height)
             ]
@@ -126,7 +127,13 @@ class Gen:
 
                     drawer(stdscr, s, color)
                     stdscr.refresh()
-                    time.sleep(0.1)
+                    time.sleep(0.03)
+        
+        #make imperfect if configured
+        if not s.perfect:
+            s.make_imperfect()
+            drawer(stdscr, s, color)
+            stdscr.refresh()
 
     def gen_dfs(s, stdscr, drawer, color) -> None:
         random.seed(s.seed)
@@ -150,7 +157,12 @@ class Gen:
 
                 drawer(stdscr, s, color)
                 stdscr.refresh()
-                time.sleep(0.1)
+                time.sleep(0.03)
+        
+        if not s.perfect:
+            s.make_imperfect()
+            drawer(stdscr, s, color)
+            stdscr.refresh()
 
     def solve_dfs(s, stdscr, drawer, color) -> None:
 
@@ -172,13 +184,13 @@ class Gen:
                 target.is_path = True
                 drawer(stdscr, s, color)
                 stdscr.refresh()
-                time.sleep(0.1)
+                time.sleep(0.03)
             else:
                 bad_path = stack.pop()
                 bad_path.is_path = False
                 drawer(stdscr, s, color)
                 stdscr.refresh()
-                time.sleep(0.1)
+                time.sleep(0.03)
 
     def get_valid_neighbours(s, cell: Cell) -> List[Cell]:
         return [
@@ -195,6 +207,11 @@ class Gen:
         s.visited = []
         s.broken_walls = 0
 
+    def reset_solver(s) -> None:
+        for line in s.maze:
+            for cell in line:
+                cell.is_path = False
+
     def is_connected(self, c1, c2):
         if c2.y < c1.y:
             return not (c1.val & 1)
@@ -205,3 +222,43 @@ class Gen:
         if c2.x < c1.x:
             return not (c1.val & 8)
         return False
+
+    def make_imperfect(s, removal_percentage: float = 0.1) -> None:
+        """removes random walls to create loops (imperfect maze).
+        
+            removal_percentage: ercentage of removable walls (default 0.1 = 10%)
+        """
+        random.seed(s.seed)
+        
+        #cells with walls that could be removed
+        potential_removals = []
+        
+        for row in s.maze:
+            for cell in row:
+                #skips reserved cells (42 pattern)
+                if cell.reserved:
+                    continue
+                
+                #checks each possible wall direction
+                for neighbor in cell.neigbours:
+                    if neighbor.reserved:
+                        continue
+                    
+                    #if a wall between cell and neighbor, add to potential list
+                    if neighbor.y < cell.y and (cell.val & 1):  #nerth wall exists
+                        potential_removals.append((cell, neighbor, 'north'))
+                    elif neighbor.x > cell.x and (cell.val & 2):  #east wall exists
+                        potential_removals.append((cell, neighbor, 'east'))
+                    #only check north and east to avoid duplicates
+        
+        #calculate how many walls to remove
+        walls_to_remove = max(1, int(len(potential_removals) * removal_percentage))
+        
+        #randomly select and remove walls
+        if potential_removals:
+            walls_selected = random.sample(potential_removals, 
+                                         min(walls_to_remove, len(potential_removals)))
+            
+            for cell, neighbor, direction in walls_selected:
+                #break the wall between cell and neighbor
+                s.break_wall(cell, neighbor)
