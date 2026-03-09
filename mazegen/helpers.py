@@ -8,13 +8,3 @@ def indexof(arr: List[Any], e: Any) -> int:
             return x
         x += 1
     return -1
-
-
-class A:
-    def __init__(s, val) -> None:
-        s.val = val
-
-    def __eq__(s, ins: object) -> bool:
-        if not isinstance(ins, A):
-            return NotImplemented
-        return s.val == ins.val
