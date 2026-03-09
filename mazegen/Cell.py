@@ -5,11 +5,11 @@ class Cell:
     def __init__(s, x: int, y: int) -> None:
         """
         initalize the cell object
-        
-        :param s: Description
-        :param x: Description
+
+        :param s: instance
+        :param x: x coordinate
         :type x: int
-        :param y: Description
+        :param y: y coordinate
         :type y: int
         """
         s.is_path: bool = False
@@ -25,7 +25,7 @@ class Cell:
     def __str__(s) -> str:
         """
         to print the maze
-        
+
         :param s: instance
         :return: string of cells with its coordinates
         :rtype: str
@@ -35,7 +35,7 @@ class Cell:
     def __eq__(s, ins: object) -> bool:
         """
         comparison between two cells
-        
+
         :param s: instance
         :param ins: another instance
         :type ins: object
@@ -49,7 +49,7 @@ class Cell:
     def before(s, maze: List[List['Cell']]) -> 'Cell':
         """
         return cell before the self cell
-        
+
         :param s: Description
         :param maze: the maze
         :type maze: List[List['Cell']]
@@ -61,7 +61,7 @@ class Cell:
     def after(s, maze: List[List['Cell']]) -> 'Cell':
         """
         return cell after the self cell
-        
+
         :param s: Description
         :param maze: the maze
         :type maze: List[List['Cell']]
@@ -73,7 +73,7 @@ class Cell:
     def abbove(s, maze: List[List['Cell']]) -> 'Cell':
         """
         return cell abbove the self cell
-        
+
         :param s: Description
         :param maze: the maze
         :type maze: List[List['Cell']]
@@ -85,7 +85,7 @@ class Cell:
     def under(s, maze: List[List['Cell']]) -> 'Cell':
         """
         return cell under the self cell
-        
+
         :param s: Description
         :param maze: the maze
         :type maze: List[List['Cell']]

@@ -203,7 +203,7 @@ class Gen:
 
     def gen_bfs(
             s, stdscr: window, drawer: Callable,
-            color: Dict[str, Tuple[int, int]]
+            color: str
             ) -> None:
         """
         generate maze using breath first search algorithm
@@ -244,7 +244,7 @@ class Gen:
 
     def gen_dfs(
             s, stdscr: window, drawer: Callable,
-            color: Dict[str, Tuple[int, int]]
+            color: str
             ) -> None:
         """
         generate maze using deep first search algorithm
@@ -290,7 +290,7 @@ class Gen:
 
     def solve_dfs(
             s, stdscr: window, drawer: Callable,
-            color: Dict[str, Tuple[int, int]]
+            color: str
             ) -> None:
         """
         maze solver

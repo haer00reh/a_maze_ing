@@ -6,6 +6,11 @@ import sys
 
 
 def main() -> None:
+    """
+    main func of a_maze_ing project
+        get configuration file name passed as command line
+        args and parse the configs
+    """
     try:
         conf = resolve_conf(sys.argv[1])
     except IndexError:

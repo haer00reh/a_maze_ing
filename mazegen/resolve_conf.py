@@ -4,6 +4,12 @@ from pydantic import ValidationError
 
 
 def parse_errors(errors: list) -> None:
+    """
+    parse given errors from errors list
+
+    :param errors: list of errors objects
+    :type errors: list
+    """
     i = 1
     for e in errors:
         if e['type'] == 'value_error':
@@ -14,6 +20,14 @@ def parse_errors(errors: list) -> None:
 
 
 def resolve_conf(conf_file: str) -> dict:
+    """
+    unpack configurations from conf_file to parse them
+
+    :param conf_file: conf file name
+    :type conf_file: str
+    :return: dict of validated parsed configurations
+    :rtype: dict
+    """
     result: dict = {}
     try:
         re: str = open(conf_file, 'r').read()

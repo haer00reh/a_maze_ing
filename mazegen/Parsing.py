@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Tuple
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -34,6 +34,14 @@ class Parsing(BaseModel):
 
     @staticmethod
     def get_conf(data: str) -> dict:
+        """
+        preparing data from config file to be parsed
+
+        :param data: the row string from readed from config file
+        :type data: str
+        :return: dict of configurations
+        :rtype: dict
+        """
         conf: dict = {}
         filtered: list = data.split('\n')
         filtered = [
@@ -64,18 +72,41 @@ class Parsing(BaseModel):
         return conf
 
     @staticmethod
-    def valid_numbers(n: str) -> int:
+    def valid_numbers(n: str) -> bool:
+        """
+        check if the given string contains only valid numbers
+
+        :param n: the given string to be checked
+        :type n: str
+        :return: boolean
+        :rtype: bool
+        """
         for el in n:
             if el not in '0123456789':
                 return False
         return True
 
     @staticmethod
-    def to_int(data: tuple) -> tuple:
+    def to_int(data: Tuple[str, str]) -> tuple:
+        """
+        converte tuple of strings to tuple of ints
+
+        :param data: tuple to be convrted
+        :type data: tuple
+        :return: tuple of ints
+        :rtype: tuple
+        """
         return (int(data[0]), int(data[1]))
 
     @model_validator(mode='after')
     def finishing(s) -> 'Parsing':
+        """
+        finale checks after parsing the configs
+
+        :param s: instance
+        :return: validated parsing object
+        :rtype: Parsing
+        """
         s.entry = s.to_int(s.entry)
         s.exit = s.to_int(s.exit)
         if s.entry == s.exit:
@@ -98,6 +129,14 @@ class Parsing(BaseModel):
     @model_validator(mode='before')
     @staticmethod
     def preparation(data: dict) -> dict:
+        """
+        preparations before validation on Parsing model
+
+        :param data: data to be prepared
+        :type data: dict
+        :return: prepared dict of data
+        :rtype: dict
+        """
         if 'width' not in data:
             raise ValueError("there is no width on configuration file")
         elif 'height' not in data:

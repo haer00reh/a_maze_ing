@@ -1,6 +1,7 @@
 import curses
+from typing import Dict, Tuple
 
-COLOR_SCHEMES = {
+COLOR_SCHEMES: Dict[str, Dict[str, Tuple[int, int]]] = {
     'color 1': {
         'entry': (curses.COLOR_CYAN, curses.COLOR_BLACK),
         'exit': (curses.COLOR_MAGENTA, curses.COLOR_BLACK),
