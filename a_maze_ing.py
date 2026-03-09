@@ -2,10 +2,16 @@ from maze.Gen import Gen
 import curses
 from maze.visualization import run_visualizer
 from maze.resolve_conf import resolve_conf
+import sys
 
 
 def main() -> None:
-    conf = resolve_conf()
+    try:
+        conf = resolve_conf(sys.argv[1])
+    except IndexError:
+        print("Error: no config file provided!")
+        return
+
     if len(conf) > 0:
         try:
             gen = Gen(conf, conf['entry'], conf['exit'])

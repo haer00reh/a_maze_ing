@@ -1,4 +1,3 @@
-from dotenv import dotenv_values
 from maze.Parsing import Parsing
 from maze.Errors import BaseConfFileErrors, FileEmptyError
 from pydantic import ValidationError
@@ -14,12 +13,10 @@ def parse_errors(errors: list) -> None:
         i += 1
 
 
-def resolve_conf() -> dict:
-    env: dict = {**dotenv_values()}
+def resolve_conf(conf_file: str) -> dict:
     result: dict = {}
     try:
-        conf_file: str | None = env.get('conf_file')
-        re: str = open(conf_file or "config.txt", 'r').read()
+        re: str = open(conf_file, 'r').read()
         if len(re) <= 0:
             raise FileEmptyError("the configuratoin file can't be empty")
     except (BaseConfFileErrors):

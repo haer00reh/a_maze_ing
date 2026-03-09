@@ -7,7 +7,6 @@ import time
 class Gen:
     def __init__(s, conf: dict, en: Tuple[int, int], ex: Tuple[int, int],
                  ) -> None:
-        print(conf)
         s.output_file: str = conf['output_file']
         s.width: int = conf['width']
         s.height: int = conf['height']
