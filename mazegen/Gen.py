@@ -1,5 +1,5 @@
 from typing import List, Tuple, Dict
-from maze.Cell import Cell
+from mazegen.Cell import Cell
 import random
 import time
 

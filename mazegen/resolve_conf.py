@@ -1,5 +1,5 @@
-from maze.Parsing import Parsing
-from maze.Errors import BaseConfFileErrors, FileEmptyError
+from mazegen.Parsing import Parsing
+from mazegen.Errors import BaseConfFileErrors, FileEmptyError
 from pydantic import ValidationError
 
 

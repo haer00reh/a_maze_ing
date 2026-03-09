@@ -1,5 +1,5 @@
 import curses
-from .color_schemes import COLOR_SCHEMES
+from mazegen.color_schemes import COLOR_SCHEMES
 
 
 def maze_drawer(stdscr, gen, scheme_name='color 1'):

@@ -1,7 +1,7 @@
-from maze.Gen import Gen
+from mazegen.Gen import Gen
 import curses
-from maze.visualization import run_visualizer
-from maze.resolve_conf import resolve_conf
+from mazegen.visualization import run_visualizer
+from mazegen.resolve_conf import resolve_conf
 import sys
 
 
