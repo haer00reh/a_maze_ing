@@ -15,6 +15,7 @@ build:
 clean:
 	@rm -rf */__pycache__
 	@rm -rf .mypy_cache
+	@rm -rf mazegen/.mypy_cache
 
 clean_all: clean
 	@$(pp) env remove
