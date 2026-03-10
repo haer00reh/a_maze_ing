@@ -3,7 +3,8 @@ name = "mazegen"
 version = "1.0.0"
 description = "Maze gerations Package"
 authors = [
-    {name = "NIGANE",email = "merkhtachraf163@gmail.com"}
+    {name = "NIGANE",email = "merkhtachraf163@gmail.com"},
+    {name = "haer00reh", email = "haer-reh@student.1337.ma"}
 ]
 requires-python = ">=3.12"
 dependencies = [

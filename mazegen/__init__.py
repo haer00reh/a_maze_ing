@@ -4,5 +4,5 @@ from .Parsing import Parsing
 from .resolve_conf import resolve_conf
 
 __version__ = '1.0.0'
-__author__ = "NIGANE"
+__authors__ = "NIGANE, haer00reh"
 __all__ = ['Cell', 'Gen', 'Parsing', 'resolve_conf']
