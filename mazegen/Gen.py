@@ -63,8 +63,12 @@ class Gen:
                 (4, 0), (4, 1)
             ]
         }
-        start_y = (s.height // 2) - 2
-        start_x = (s.width // 2) - 2
+        if s.width % 2 == 1:
+            start_y = (s.height // 2) - 2
+            start_x = (s.width // 2) - 2
+        else:
+            start_y = (s.height // 2) - 2
+            start_x = (s.width // 2) - 3
 
         for row in s.maze:
             for cell in row:
