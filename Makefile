@@ -16,6 +16,7 @@ clean:
 	@rm -rf */__pycache__
 	@rm -rf .mypy_cache
 	@rm -rf mazegen/.mypy_cache
+	@rm -rf .vscode
 
 fclean: clean
 	@$(pp) env remove
