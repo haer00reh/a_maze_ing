@@ -17,8 +17,7 @@ clean:
 	@rm -rf .mypy_cache
 	@rm -rf mazegen/.mypy_cache
 
-clean_all: clean
+fclean: clean
 	@$(pp) env remove
 	@echo "to remove poetry u can run:"
 	@echo "|-- pip uninstall poetry"
-
