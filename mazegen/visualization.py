@@ -5,7 +5,7 @@ from mazegen import Gen
 
 
 def maze_drawer(
-        stdscr: window, gen: Gen, scheme_name='color 1') -> None:
+        stdscr: window, gen: Gen, scheme_name: str = 'color 1') -> None:
     """
     drawer func to drawe the maze
 
@@ -194,7 +194,7 @@ def run_visualizer(stdscr: window, gen: Gen) -> None:
     scheme_names = list(COLOR_SCHEMES.keys())
     current_scheme_idx = 0
 
-    def init_color_scheme(scheme_name):
+    def init_color_scheme(scheme_name: str) -> None:
         scheme = COLOR_SCHEMES[scheme_name]
         curses.init_pair(1, *scheme['walls'])
         curses.init_pair(2, *scheme['entry'])

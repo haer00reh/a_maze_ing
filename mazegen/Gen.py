@@ -399,7 +399,7 @@ class Gen:
             for cell in line:
                 cell.is_path = False
 
-    def is_connected(self, c1: Cell, c2: Cell):
+    def is_connected(self, c1: Cell, c2: Cell) -> bool:
         """
         check if two cells are connected
 
